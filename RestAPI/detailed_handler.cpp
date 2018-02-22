@@ -13,12 +13,7 @@ using namespace web::http::experimental::listener;
 
 //список всех котнтейнеров, список блобов в контейнере
 //pplx::task<web::json::value> handler::get_container(std::map<utility::string_t, utility::string_t> query) {
-//	if (query.size() == 0) {
 //
-//	}
-//	if (query.size() == 1) {
-//
-//	}
 //}
 
 //получение журнала контейнера
