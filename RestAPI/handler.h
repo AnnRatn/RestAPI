@@ -11,7 +11,7 @@ using namespace utility;
 using namespace http::experimental::listener;
 
 
-//основные url
+//main url
 class api_creds
 {
 public:

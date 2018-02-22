@@ -52,12 +52,12 @@ void handler::handle_get(http_request message)
 		return;
 	}
 	if (message.relative_uri().path().compare(api_creds::container_url) == 0) {
-		//метод-обработчик, параметр: split_query
+		//method from detailed_handler, parametr: split_query
 		//message.reply(status_codes::BadRequest);
 		return;
 	}
 	if (message.relative_uri().path().compare(api_creds::logs_url) == 0) {
-		//метод-обработчик, параметр: split_query
+		//method from detailed_handler, parametr: split_query
 		//message.reply(status_codes::Created);
 		return;
 	}
@@ -78,17 +78,17 @@ void handler::handle_post(http_request message)
 	auto split_query = uri::split_query(query);
 
 	if (message.relative_uri().path().compare(api_creds::container_url) == 0) {
-		//метод-обработчик, параметр: split_query
+		//method from detailed_handler, parametr: split_query
 		//message.reply(status_codes::OK);
 		return;
 	}
 	if (message.relative_uri().path().compare(api_creds::blob_url) == 0) {
-		//метод-обработчик, параметр: split_query
+		//method from detailed_handler, parametr: split_query
 		//message.reply(status_codes::BadRequest);
 		return;
 	}
 	if (message.relative_uri().path().compare(api_creds::merge_url) == 0) {
-		//метод-обработчик, параметр: split_query
+		//method from detailed_handler, parametr: split_query
 		//message.reply(status_codes::Created);
 		return;
 	}
@@ -109,7 +109,7 @@ void handler::handle_delete(http_request message)
 	auto split_query = uri::split_query(query);
 
 	if (message.relative_uri().path().compare(api_creds::container_url) == 0) {
-		//метод-обработчик, параметр: split_query
+		//method from detailed_handler, parametr: split_query
 		//message.reply(status_codes::OK);
 		return;
 	}

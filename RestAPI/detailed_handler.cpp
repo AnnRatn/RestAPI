@@ -11,32 +11,32 @@ using namespace web::http::client;
 using namespace web::http::experimental;
 using namespace web::http::experimental::listener;
 
-//список всех котнтейнеров, список блобов в контейнере
+//list of all containers, list of all blobs in container
 //pplx::task<web::json::value> handler::get_container(std::map<utility::string_t, utility::string_t> query) {
 //
 //}
 
-//получение журнала контейнера
+//get log from container
 //pplx::task<web::json::value> handler::get_logs(std::map<utility::string_t, utility::string_t> query) {
 //
 //}
 //
-////создеть/проверить контейнер
+////create container
 //pplx::task<web::json::value> handler::post_containers(std::map<utility::string_t, utility::string_t> query) {
 //
 //}
 //
-////создать блоб
+////create blob
 //pplx::task<web::json::value> handler::post_blobs(std::map<utility::string_t, utility::string_t> query) {
 //
 //}
 //
-////объединить блобы
+////merge blobs
 //pplx::task<web::json::value> handler::post_merge(std::map<utility::string_t, utility::string_t> query) {
 //
 //}
 //
-////удалить контейнер
+////delete container
 //pplx::task<web::json::value> handler::delete_container(std::map<utility::string_t, utility::string_t> query) {
 //
 //}
