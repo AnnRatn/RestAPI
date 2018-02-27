@@ -2,19 +2,13 @@
 #include "stdafx.h"
 
 
-const utility::string_t api_creds::main_url = U("/");
-const utility::string_t api_creds::container_url = U("/container");
-const utility::string_t api_creds::blob_url = U("/container/blob");
-const utility::string_t api_creds::logs_url = U("/container/logs");
-const utility::string_t api_creds::merge_url = U("/container/merge");
-
 handler::handler()
 {
 	//ctor
 }
 handler::handler(utility::string_t url) :m_listener(url)
 {
-	m_listener.support(methods::GET, std::bind(&handler::handle_get, this, std::placeholders::_1));
+	m_listener.support(methods::GET, std::bind(&handler::handle_get,this, std::placeholders::_1));
 	m_listener.support(methods::POST, std::bind(&handler::handle_post, this, std::placeholders::_1));
 	m_listener.support(methods::DEL, std::bind(&handler::handle_delete, this, std::placeholders::_1));
 }
@@ -42,23 +36,27 @@ void handler::handle_error(pplx::task<void>& t)
 void handler::handle_get(http_request message)
 {
 	ucout << message.to_string() << endl;
-	ucout << message.relative_uri().path() << endl;
 
-	const auto query = web::uri(message.absolute_uri()).query();
-	auto split_query = uri::split_query(query);
+	const auto path = web::uri(message.absolute_uri()).path();
+	auto split_path = uri::split_path(path);
+	ucout << path << endl;
+	ucout << split_path[0] << endl;
 
-	if (message.relative_uri().path().compare(api_creds::main_url) == 0) {
-		//message.reply(status_codes::OK);
+
+	if (split_path.size() == 0) {
+		message.reply(status_codes::OK, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
-	if (message.relative_uri().path().compare(api_creds::container_url) == 0) {
-		//method from detailed_handler, parametr: split_query
-		//message.reply(status_codes::BadRequest);
+	if (split_path.size() == 1) {
+		message.reply(status_codes::Created, get_list_container()).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
-	if (message.relative_uri().path().compare(api_creds::logs_url) == 0) {
-		//method from detailed_handler, parametr: split_query
-		//message.reply(status_codes::Created);
+	if (split_path.size() == 2) {
+		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		return;
+	}
+	if (split_path.size() == 3) {
+		message.reply(status_codes::OK, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 
@@ -72,24 +70,22 @@ void handler::handle_get(http_request message)
 void handler::handle_post(http_request message)
 {
 	ucout << message.to_string() << endl;
-	ucout << message.relative_uri().path() << endl;
 
-	const auto query = web::uri(message.absolute_uri()).query();
-	auto split_query = uri::split_query(query);
+	const auto path = web::uri(message.absolute_uri()).path();
+	auto split_path = uri::split_path(path);
+	ucout << path << endl;
+	ucout << split_path[0] << endl;
 
-	if (message.relative_uri().path().compare(api_creds::container_url) == 0) {
-		//method from detailed_handler, parametr: split_query
-		//message.reply(status_codes::OK);
+	if (split_path.size() == 2) {
+		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
-	if (message.relative_uri().path().compare(api_creds::blob_url) == 0) {
-		//method from detailed_handler, parametr: split_query
-		//message.reply(status_codes::BadRequest);
+	if (split_path.size() == 3) {
+		message.reply(status_codes::OK, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
-	if (message.relative_uri().path().compare(api_creds::merge_url) == 0) {
-		//method from detailed_handler, parametr: split_query
-		//message.reply(status_codes::Created);
+	if (split_path.size() == 4) {
+		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 
@@ -103,14 +99,14 @@ void handler::handle_post(http_request message)
 void handler::handle_delete(http_request message)
 {
 	ucout << message.to_string() << endl;
-	ucout << message.relative_uri().path() << endl;
 
-	const auto query = web::uri(message.absolute_uri()).query();
-	auto split_query = uri::split_query(query);
+	const auto path = web::uri(message.absolute_uri()).path();
+	auto split_path = uri::split_path(path);
+	ucout << path << endl;
+	ucout << split_path[0] << endl;
 
-	if (message.relative_uri().path().compare(api_creds::container_url) == 0) {
-		//method from detailed_handler, parametr: split_query
-		//message.reply(status_codes::OK);
+	if (split_path.size() == 2) {
+		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 

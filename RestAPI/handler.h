@@ -11,17 +11,6 @@ using namespace utility;
 using namespace http::experimental::listener;
 
 
-//main url
-class api_creds
-{
-public:
-	static const utility::string_t main_url;
-	static const utility::string_t container_url;
-	static const utility::string_t blob_url;
-	static const utility::string_t logs_url;
-	static const utility::string_t merge_url;
-};
-
 class handler
 {
 public:
@@ -35,11 +24,18 @@ public:
 	pplx::task<void>close() { return m_listener.close(); }
 
 private:
+	static LPCTSTR main_server_path;
+
 	void handle_get(http_request message);
 	void handle_post(http_request message);
 	void handle_delete(http_request message);
 	void handle_error(pplx::task<void>& t);
+	//pplx::task<json::value> handle_exception(pplx::task<json::value>& t, const utility::string_t& field_name);
 
+	void get_data();
+
+	pplx::task<json::value> handle_exception(pplx::task<json::value>& t, const utility::string_t& field_name);
+	web::json::value get_list_container();
 	pplx::task<web::json::value> get_container(std::map<utility::string_t, utility::string_t> query);
 	pplx::task<web::json::value> get_logs(std::map<utility::string_t, utility::string_t> query);
 	pplx::task<web::json::value> post_containers(std::map<utility::string_t, utility::string_t> query);
