@@ -39,24 +39,22 @@ void handler::handle_get(http_request message)
 
 	const auto path = web::uri(message.absolute_uri()).path();
 	auto split_path = uri::split_path(path);
-	ucout << path << endl;
-	ucout << split_path[0] << endl;
 
 
 	if (split_path.size() == 0) {
-		message.reply(status_codes::OK, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(status_codes::OK, U("This is big files uploader")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 	if (split_path.size() == 1) {
-		message.reply(status_codes::Created, get_list_container()).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(status_codes::OK, get_list_container()).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 	if (split_path.size() == 2) {
-		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(status_codes::OK, get_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 	if (split_path.size() == 3) {
-		message.reply(status_codes::OK, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(status_codes::OK, get_logs(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 

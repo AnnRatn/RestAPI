@@ -32,16 +32,15 @@ private:
 	void handle_error(pplx::task<void>& t);
 	//pplx::task<json::value> handle_exception(pplx::task<json::value>& t, const utility::string_t& field_name);
 
-	void get_data();
+	web::json::value get_data(utility::string_t& local_path);
 
-	pplx::task<json::value> handle_exception(pplx::task<json::value>& t, const utility::string_t& field_name);
 	web::json::value get_list_container();
-	pplx::task<web::json::value> get_container(std::map<utility::string_t, utility::string_t> query);
-	pplx::task<web::json::value> get_logs(std::map<utility::string_t, utility::string_t> query);
-	pplx::task<web::json::value> post_containers(std::map<utility::string_t, utility::string_t> query);
-	pplx::task<web::json::value> post_blobs(std::map<utility::string_t, utility::string_t> query);
-	pplx::task<web::json::value> post_merge(std::map<utility::string_t, utility::string_t> query);
-	pplx::task<web::json::value> delete_container(std::map<utility::string_t, utility::string_t> query);
+	web::json::value get_container(const utility::string_t& url);
+	web::json::value get_logs(const utility::string_t& url);
+	web::json::value post_containers(std::map<utility::string_t, utility::string_t> query);
+	web::json::value post_blobs(std::map<utility::string_t, utility::string_t> query);
+	web::json::value post_merge(std::map<utility::string_t, utility::string_t> query);
+	web::json::value delete_container(std::map<utility::string_t, utility::string_t> query);
 };
 
 #endif // HANDLER_H
