@@ -35,7 +35,7 @@ void handler::handle_error(pplx::task<void>& t)
 //
 void handler::handle_get(http_request message)
 {
-	ucout << message.to_string() << endl;
+	//ucout << message.to_string() << endl;
 
 	const auto path = web::uri(message.absolute_uri()).path();
 	auto split_path = uri::split_path(path);
@@ -67,23 +67,22 @@ void handler::handle_get(http_request message)
 //
 void handler::handle_post(http_request message)
 {
-	ucout << message.to_string() << endl;
+	//ucout << message.to_string() << endl;
 
 	const auto path = web::uri(message.absolute_uri()).path();
 	auto split_path = uri::split_path(path);
-	ucout << path << endl;
-	ucout << split_path[0] << endl;
 
 	if (split_path.size() == 2) {
-		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(post_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 	if (split_path.size() == 3) {
-		message.reply(status_codes::OK, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 	if (split_path.size() == 4) {
-		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		std::string body = message.extract_utf8string().get();
+		message.reply(post_blob(split_path[1], split_path[3], body)).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 
@@ -96,15 +95,13 @@ void handler::handle_post(http_request message)
 //
 void handler::handle_delete(http_request message)
 {
-	ucout << message.to_string() << endl;
+	//ucout << message.to_string() << endl;
 
 	const auto path = web::uri(message.absolute_uri()).path();
 	auto split_path = uri::split_path(path);
-	ucout << path << endl;
-	ucout << split_path[0] << endl;
 
 	if (split_path.size() == 2) {
-		message.reply(status_codes::BadRequest, delete_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(delete_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 

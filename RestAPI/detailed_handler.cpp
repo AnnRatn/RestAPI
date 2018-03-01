@@ -39,7 +39,6 @@ web::json::value handler::get_logs(const utility::string_t& url) {
 
 	json::value get_log_json;
 	utility::string_t file = main_server_path + url + U("\\log.txt");
-	utility::stringstream_t stream_json;
 	try {
 		utility::ifstream_t reader(file);
 		get_log_json = json::value::parse(reader);
@@ -51,24 +50,51 @@ web::json::value handler::get_logs(const utility::string_t& url) {
 
 	return get_log_json;
 }
-//
-////create container
-//web::json::value handler::post_containers(std::map<utility::string_t, utility::string_t> query) {
-//
-//}
-//
-////create blob
-//web::json::value handler::post_blobs(std::map<utility::string_t, utility::string_t> query) {
-//
-//}
-//
+
+//create container
+web::http::status_code handler::post_container(const utility::string_t& url) {
+	TCHAR path[300];
+	StringCchPrintf(path, 300, L"%s%s", main_server_path.c_str(), url.c_str());
+
+	WIN32_FIND_DATA FindFileData;
+	HANDLE hf;
+
+	hf = FindFirstFile(path, &FindFileData);
+
+	if (hf != INVALID_HANDLE_VALUE) {
+		return web::http::status_codes::OK;
+	}
+	else {
+		CreateDirectory(path, NULL);
+		return web::http::status_codes::Created;
+	}
+}
+
+//create blob
+web::http::status_code handler::post_blob(const utility::string_t& cont_url, const utility::string_t& blob_url, std::string& body) {
+
+	utility::string_t file = main_server_path + cont_url + U("\\") + blob_url;
+
+	try {
+		std::ofstream reader(file);
+
+		reader << body;
+		reader.close();
+	}
+	catch (...) {
+		return web::http::status_codes::InternalError;
+	}
+
+	return web::http::status_codes::OK;
+}
+
 ////merge blobs
-//web::json::value handler::post_merge(std::map<utility::string_t, utility::string_t> query) {
+//web::http::status_code handler::post_merge(std::map<utility::string_t, utility::string_t> query) {
 //
 //}
 
 //delete container
-web::json::value handler::delete_container(const utility::string_t& url) {
+web::http::status_code handler::delete_container(const utility::string_t& url) {
 
 	TCHAR path[300];
 	TCHAR local_path[300];
@@ -98,12 +124,11 @@ web::json::value handler::delete_container(const utility::string_t& url) {
 	json::value answer;
 
 	if (RemoveDirectory(path) == 0) {
-		answer = json::value::string(U("Can not delete container"));
+		return web::http::status_codes::NoContent;
 	}
 	else {
-		answer = json::value::string(U("Container deleted"));
+		return web::http::status_codes::OK;
 	}
-	return answer;
 }
 
 
