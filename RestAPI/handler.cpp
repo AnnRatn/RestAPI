@@ -104,7 +104,7 @@ void handler::handle_delete(http_request message)
 	ucout << split_path[0] << endl;
 
 	if (split_path.size() == 2) {
-		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(status_codes::BadRequest, delete_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 

@@ -24,7 +24,7 @@ public:
 	pplx::task<void>close() { return m_listener.close(); }
 
 private:
-	static LPCTSTR main_server_path;
+	static utility::string_t main_server_path;
 
 	void handle_get(http_request message);
 	void handle_post(http_request message);
@@ -40,7 +40,7 @@ private:
 	web::json::value post_containers(std::map<utility::string_t, utility::string_t> query);
 	web::json::value post_blobs(std::map<utility::string_t, utility::string_t> query);
 	web::json::value post_merge(std::map<utility::string_t, utility::string_t> query);
-	web::json::value delete_container(std::map<utility::string_t, utility::string_t> query);
+	web::json::value delete_container(const utility::string_t& url);
 };
 
 #endif // HANDLER_H
