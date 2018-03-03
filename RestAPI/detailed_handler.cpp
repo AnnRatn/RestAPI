@@ -71,12 +71,12 @@ web::http::status_code handler::post_container(const utility::string_t& url) {
 }
 
 //create blob
-web::http::status_code handler::post_blob(const utility::string_t& cont_url, const utility::string_t& blob_url, std::string& body) {
+web::http::status_code handler::post_blob(const utility::string_t& cont_url, const utility::string_t& blob_url, const utility::string_t& body) {
 
-	utility::string_t file = main_server_path + cont_url + U("\\") + blob_url;
+	utility::string_t file = main_server_path + cont_url + U("\\") + blob_url + U(".txt");
 
 	try {
-		ofstream out(file, ios::binary);
+		utility::ofstream_t out(file, ios::binary);
 		out.write(body.c_str(), body.length());
 		out.close();
 	}

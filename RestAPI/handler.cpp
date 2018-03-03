@@ -81,8 +81,7 @@ void handler::handle_post(http_request message)
 		return;
 	}
 	if (split_path.size() == 4) {
-		std::string body = message.extract_utf8string().get();
-		message.reply(post_blob(split_path[1], split_path[3], body)).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(post_blob(split_path[1], split_path[3], message.extract_string().get())).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 
