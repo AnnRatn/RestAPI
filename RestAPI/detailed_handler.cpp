@@ -12,7 +12,7 @@ using namespace web::http::experimental;
 using namespace web::http::experimental::listener;
 
 
-utility::string_t handler::main_server_path = U("C:\\container\\");
+utility::string_t handler::main_server_path = U("..\\container\\");
 
 
 //list of all containers
@@ -135,6 +135,7 @@ web::http::status_code handler::post_merge(const utility::string_t& url, const u
 				out.write(buf, sizef);
 				in.close();
 				delete [] buf;
+				DeleteFile(local_file_path);
 			}
 		} while (FindNextFile(hf, &FindFileData) != 0);
 
