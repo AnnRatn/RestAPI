@@ -77,7 +77,7 @@ void handler::handle_post(http_request message)
 		return;
 	}
 	if (split_path.size() == 3) {
-		message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(post_merge(split_path[1], message.extract_string().get())).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 	if (split_path.size() == 4) {
@@ -86,7 +86,7 @@ void handler::handle_post(http_request message)
 		return;
 	}
 
-	message.reply(status_codes::NotFound, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+	message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
 	return;
 };
 

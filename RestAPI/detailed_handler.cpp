@@ -76,10 +76,9 @@ web::http::status_code handler::post_blob(const utility::string_t& cont_url, con
 	utility::string_t file = main_server_path + cont_url + U("\\") + blob_url;
 
 	try {
-		std::ofstream reader(file);
-
-		reader << body;
-		reader.close();
+		ofstream out(file, ios::binary);
+		out.write(body.c_str(), body.length());
+		out.close();
 	}
 	catch (...) {
 		return web::http::status_codes::InternalError;
@@ -88,10 +87,65 @@ web::http::status_code handler::post_blob(const utility::string_t& cont_url, con
 	return web::http::status_codes::OK;
 }
 
-////merge blobs
-//web::http::status_code handler::post_merge(std::map<utility::string_t, utility::string_t> query) {
-//
-//}
+//merge blobs
+web::http::status_code handler::post_merge(const utility::string_t& url, const utility::string_t& format) {
+
+	TCHAR path[300];
+	TCHAR local_path[300];
+	TCHAR local_file_path[300];
+
+	StringCchPrintf(path, 300, L"%s%s", main_server_path.c_str(), url.c_str());
+	StringCchPrintf(local_path, 300, L"%s%s", path, L"\\*");
+
+	WIN32_FIND_DATA FindFileData;
+	HANDLE hf;
+
+
+	StringCchPrintf(local_file_path, 300, L"%s%s%s", path, L"\\merge.", format.c_str());
+	utility::ifstream_t in;
+	utility::ofstream_t out(local_file_path, ios::binary);
+	if (!out) {
+		return web::http::status_codes::BadRequest;
+	}
+
+	hf = FindFirstFile(local_path, &FindFileData);
+	utility::string_t file_name;
+
+	utility::char_t* buf = NULL;
+
+
+	if (hf != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			file_name = FindFileData.cFileName;
+			if ((file_name.compare(L"log.txt") != 0) && (file_name.compare(L".") != 0) && (file_name.compare(L"..") != 0) && (file_name.find(L"merge") == std::string::npos)) {
+				StringCchPrintf(local_file_path, 300, L"%s%s%s", path, L"\\", file_name.c_str());
+				in.open(local_file_path, ios::binary);
+				if (!in) {
+					return web::http::status_codes::BadRequest;
+				}
+				in.seekg(0, ios::end);
+				int sizef = in.tellg();
+				in.seekg(0, ios::beg);
+				buf = new char_t[sizef];
+
+				in.read(buf, sizef);
+
+				out.write(buf, sizef);
+				in.close();
+				delete [] buf;
+			}
+		} while (FindNextFile(hf, &FindFileData) != 0);
+
+		return web::http::status_codes::OK;
+
+		FindClose(hf);
+		out.close();
+	}
+	
+	return web::http::status_codes::BadRequest;
+}
 
 //delete container
 web::http::status_code handler::delete_container(const utility::string_t& url) {
@@ -106,22 +160,20 @@ web::http::status_code handler::delete_container(const utility::string_t& url) {
 	HANDLE hf;
 
 	hf = FindFirstFile(local_path, &FindFileData);
-	std::wstring s;
+	utility::string_t file_name;
 
 	if (hf != INVALID_HANDLE_VALUE)
 	{
 		do
 		{
-			s = FindFileData.cFileName;
-			StringCchPrintf(local_file_path, 300, L"%s%s%s", path, L"\\", s.c_str());
+			file_name = FindFileData.cFileName;
+			StringCchPrintf(local_file_path, 300, L"%s%s%s", path, L"\\", file_name.c_str());
 			DeleteFile(local_file_path);
 			
 		} while (FindNextFile(hf, &FindFileData) != 0);
 	}
 
 	FindClose(hf);
-
-	json::value answer;
 
 	if (RemoveDirectory(path) == 0) {
 		return web::http::status_codes::NoContent;
@@ -145,14 +197,14 @@ web::json::value handler::get_data(utility::string_t& local_path) {
 	hf = FindFirstFile(path, &FindFileData);
 	json::value vector;
 	int i = 0;
-	std::wstring s;
+	utility::string_t file_name;
 
 	if (hf != INVALID_HANDLE_VALUE)
 	{
 		do
 		{
-			s = FindFileData.cFileName;
-			if ((s.compare(L".") != 0) && (s.compare(L"..") != 0)) {
+			file_name = FindFileData.cFileName;
+			if ((file_name.compare(L".") != 0) && (file_name.compare(L"..") != 0)) {
 				vector[i] = json::value(FindFileData.cFileName);
 				i++;
 			}

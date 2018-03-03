@@ -39,7 +39,7 @@ private:
 	web::json::value get_logs(const utility::string_t& url);
 	web::http::status_code post_container(const utility::string_t& url);
 	web::http::status_code post_blob(const utility::string_t& cont_url, const utility::string_t& blob_url, std::string& body);
-	web::http::status_code post_merge(std::map<utility::string_t, utility::string_t> query);
+	web::http::status_code post_merge(const utility::string_t& url, const utility::string_t& format);
 	web::http::status_code delete_container(const utility::string_t& url);
 };
 
