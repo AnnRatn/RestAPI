@@ -24,6 +24,7 @@ public:
 	pplx::task<void>close() { return m_listener.close(); }
 
 private:
+
 	static utility::string_t main_server_path;
 
 	void handle_get(http_request message);
