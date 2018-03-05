@@ -53,7 +53,7 @@ web::json::value handler::get_logs(const utility::string_t& url) {
 
 //create container
 web::http::status_code handler::post_container(const utility::string_t& url) {
-	TCHAR path[300];
+	TCHAR* path = new TCHAR[300];
 	StringCchPrintf(path, 300, L"%s%s", main_server_path.c_str(), url.c_str());
 
 	WIN32_FIND_DATA FindFileData;
@@ -62,10 +62,14 @@ web::http::status_code handler::post_container(const utility::string_t& url) {
 	hf = FindFirstFile(path, &FindFileData);
 
 	if (hf != INVALID_HANDLE_VALUE) {
+		FindClose(hf);
+		delete[] path;
 		return web::http::status_codes::OK;
 	}
 	else {
 		CreateDirectory(path, NULL);
+		FindClose(hf);
+		delete[] path;
 		return web::http::status_codes::Created;
 	}
 }
@@ -90,9 +94,9 @@ web::http::status_code handler::post_blob(const utility::string_t& cont_url, con
 //merge blobs
 web::http::status_code handler::post_merge(const utility::string_t& url, const utility::string_t& format) {
 
-	TCHAR path[300];
-	TCHAR local_path[300];
-	TCHAR local_file_path[300];
+	TCHAR* path = new TCHAR[300];
+	TCHAR* local_path = new TCHAR[300];
+	TCHAR* local_file_path = new TCHAR[300];
 
 	StringCchPrintf(path, 300, L"%s%s", main_server_path.c_str(), url.c_str());
 	StringCchPrintf(local_path, 300, L"%s%s", path, L"\\*");
@@ -134,15 +138,19 @@ web::http::status_code handler::post_merge(const utility::string_t& url, const u
 
 				out.write(buf, sizef);
 				in.close();
-				delete [] buf;
+				delete[] buf;
 				DeleteFile(local_file_path);
 			}
 		} while (FindNextFile(hf, &FindFileData) != 0);
 
-		return web::http::status_codes::OK;
-
 		FindClose(hf);
 		out.close();
+
+		delete[] path;
+		delete[] local_path;
+		delete[] local_file_path;
+
+		return web::http::status_codes::OK;
 	}
 	
 	return web::http::status_codes::BadRequest;
@@ -151,9 +159,9 @@ web::http::status_code handler::post_merge(const utility::string_t& url, const u
 //delete container
 web::http::status_code handler::delete_container(const utility::string_t& url) {
 
-	TCHAR path[300];
-	TCHAR local_path[300];
-	TCHAR local_file_path[300];
+	TCHAR* path = new TCHAR[300];
+	TCHAR* local_path = new TCHAR[300];
+	TCHAR* local_file_path = new TCHAR[300];
 	StringCchPrintf(path, 300, L"%s%s", main_server_path.c_str(), url.c_str());
 	StringCchPrintf(local_path, 300, L"%s%s", path, L"\\*");
 
@@ -176,6 +184,10 @@ web::http::status_code handler::delete_container(const utility::string_t& url) {
 
 	FindClose(hf);
 
+	delete[] path;
+	delete[] local_path;
+	delete[] local_file_path;
+
 	if (RemoveDirectory(path) == 0) {
 		return web::http::status_codes::NoContent;
 	}
@@ -188,7 +200,7 @@ web::http::status_code handler::delete_container(const utility::string_t& url) {
 //getting data
 web::json::value handler::get_data(utility::string_t& local_path) {
 	//make a path
-	TCHAR path[300];
+	TCHAR* path = new TCHAR[300];
 	StringCchPrintf(path, 300, L"%s%s", main_server_path.c_str(), local_path.c_str());
 
 	WIN32_FIND_DATA FindFileData;
@@ -213,5 +225,6 @@ web::json::value handler::get_data(utility::string_t& local_path) {
 	}
 
 	FindClose(hf);
+	delete[] path;
 	return vector;
 }
