@@ -9,7 +9,6 @@ using namespace web;
 using namespace web::http;
 using namespace web::http::client;
 using namespace web::http::experimental;
-using namespace web::http::experimental::listener;
 
 
 utility::string_t handler::main_server_path = U("..\\container\\");
@@ -34,21 +33,29 @@ web::json::value handler::get_container(const utility::string_t& url) {
 	return get_container_blobs_json;
 }
 
-//get log from container. Data in the log-journal is saved in JSON-format
-web::json::value handler::get_logs(const utility::string_t& url) {
+//get log. Data in the log-journal is saved in JSON-format
+web::json::value handler::get_logs() {
 
 	json::value get_log_json;
-	utility::string_t file = main_server_path + url + U("\\log.txt");
-	try {
-		utility::ifstream_t reader(file);
-		get_log_json = json::value::parse(reader);
-		reader.close();
-	}
-	catch(...){
-		get_log_json[L"log"] = json::value::string(U("Log reading error"));
-	}
+	json::value request_json;
+	utility::string_t file = main_server_path+ U("log.txt");
+	utility::ifstream_t reader(file);
 
-	return get_log_json;
+	if (!reader) {
+		request_json[L"log"] = json::value::string(U("Log reading error"));
+	}
+	char_t* line = new char_t[300];
+	int i = 0;
+	while (!reader.eof()) {
+		reader.getline(line, 300);
+		if (utility::conversions::to_string_t(line).size() != 0) {
+			get_log_json[i] = json::value::parse(line);
+			i++;
+		}
+	}
+	delete[] line;
+	request_json[L"log"] = get_log_json;
+	return request_json;
 }
 
 //create container
@@ -77,7 +84,7 @@ web::http::status_code handler::post_container(const utility::string_t& url) {
 //create blob
 web::http::status_code handler::post_blob(const utility::string_t& cont_url, const utility::string_t& blob_url, const utility::string_t& body) {
 
-	utility::string_t file = main_server_path + cont_url + U("\\") + blob_url + U(".txt");
+	utility::string_t file = main_server_path + cont_url + U("\\") + blob_url + U(".blob");
 
 	try {
 		utility::ofstream_t out(file, ios::binary);

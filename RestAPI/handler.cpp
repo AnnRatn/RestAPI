@@ -1,12 +1,15 @@
 #include "handler.h"
+#include "logger.h"
 #include "stdafx.h"
 
 
 handler::handler()
-{
-	//ctor
-}
-handler::handler(utility::string_t url) :m_listener(url)
+	: log(new logger(main_server_path))
+{}
+
+handler::handler(utility::string_t url) 
+	: m_listener(url)
+	, log(new logger(main_server_path))
 {
 	m_listener.support(methods::GET, std::bind(&handler::handle_get,this, std::placeholders::_1));
 	m_listener.support(methods::POST, std::bind(&handler::handle_post, this, std::placeholders::_1));
@@ -22,7 +25,7 @@ handler::~handler()
 std::regex main_url("(\/?)");
 std::regex get_list_container_url("(\/container\/?)");
 std::regex get_container_url("(\/container\/[0-9]*\/?)");
-std::regex get_logs_url("(\/container\/[0-9]*\/log\/?)");
+std::regex get_logs_url("(\/container\/log\/?)");
 
 std::regex post_container_url("(\/container\/[0-9]*\/?)");
 std::regex post_blob_url("(\/container\/[0-9]*\/blob\/[0-9]*\/?)");
@@ -37,9 +40,10 @@ void handler::handle_error(pplx::task<void>& t)
 		t.get();
 		//ucout << "Error" << endl;
 	}
-	catch (...)
+	catch (exception& ex)
 	{
-		// Ignore the error, Log it if a logger is available 
+		utility::string_t error = utility::conversions::to_string_t(ex.what());
+		log->put_error_record(error);
 	}
 }
 
@@ -53,6 +57,8 @@ void handler::handle_get(http_request message)
 	const auto path = web::uri(message.absolute_uri()).path();
 	auto split_path = uri::split_path(path);
 
+	log->put_request_record(message);
+
 	if ((split_path.size() == 0) && (std::regex_match(utility::conversions::to_utf8string(path), main_url))) {
 		message.reply(status_codes::OK, U("This is big files uploader")).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
@@ -65,8 +71,8 @@ void handler::handle_get(http_request message)
 		message.reply(status_codes::OK, get_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
-	if ((split_path.size() == 3) && (std::regex_match(utility::conversions::to_utf8string(path), get_logs_url))) {
-		message.reply(status_codes::OK, get_logs(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
+	if ((split_path.size() == 2) && (std::regex_match(utility::conversions::to_utf8string(path), get_logs_url))) {
+		message.reply(status_codes::OK, get_logs()).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 
@@ -83,6 +89,8 @@ void handler::handle_post(http_request message)
 
 	const auto path = web::uri(message.absolute_uri()).path();
 	auto split_path = uri::split_path(path);
+
+	log->put_request_record(message);
 
 	if ((split_path.size() == 2) && (std::regex_match(utility::conversions::to_utf8string(path), post_container_url))) {
 		message.reply(post_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
@@ -110,6 +118,8 @@ void handler::handle_delete(http_request message)
 
 	const auto path = web::uri(message.absolute_uri()).path();
 	auto split_path = uri::split_path(path);
+
+	log->put_request_record(message);
 
 	if ((split_path.size() == 2) && (std::regex_match(utility::conversions::to_utf8string(path), delete_container_url))) {
 		message.reply(delete_container(split_path[1])).then([&](pplx::task<void> t) { handle_error(t); });
