@@ -179,7 +179,7 @@ web::http::status_code handler::post_blob(const utility::string_t& cont_url, con
 		out.close();
 	}
 	catch (...) {
-		return web::http::status_codes::InternalError;
+		return web::http::status_codes::BadRequest;
 	}
 
 	return web::http::status_codes::OK;
