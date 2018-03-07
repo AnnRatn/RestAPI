@@ -60,7 +60,7 @@ void handler::handle_get(http_request message)
 	log->put_request_record(message);
 
 	if ((split_path.size() == 0) && (std::regex_match(utility::conversions::to_utf8string(path), main_url))) {
-		message.reply(status_codes::OK, U("This is big files uploader")).then([&](pplx::task<void> t) { handle_error(t); });
+		message.reply(status_codes::OK, get_start_page()).then([&](pplx::task<void> t) { handle_error(t); });
 		return;
 	}
 	if ((split_path.size() == 1) && (std::regex_match(utility::conversions::to_utf8string(path), get_list_container_url))) {

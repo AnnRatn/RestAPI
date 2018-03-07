@@ -29,6 +29,7 @@ public:
 private:
 
 	static utility::string_t main_server_path;
+	static utility::string_t main_server_url_path;
 
 	void handle_get(http_request message);
 	void handle_post(http_request message);
@@ -36,8 +37,7 @@ private:
 	void handle_error(pplx::task<void>& t);
 	//pplx::task<json::value> handle_exception(pplx::task<json::value>& t, const utility::string_t& field_name);
 
-	web::json::value get_data(utility::string_t& local_path);
-
+	web::json::value get_start_page();
 	web::json::value get_list_container();
 	web::json::value get_container(const utility::string_t& url);
 	web::json::value get_logs();
