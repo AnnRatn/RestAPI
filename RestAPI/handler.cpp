@@ -76,7 +76,7 @@ void handler::handle_get(http_request message)
 		return;
 	}
 
-	message.reply(status_codes::NotFound, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+	message.reply(status_codes::NotFound, json::value::string(U("Path not found"))).then([&](pplx::task<void> t) { handle_error(t); });
 	return;
 };
 
@@ -105,7 +105,7 @@ void handler::handle_post(http_request message)
 		return;
 	}
 
-	message.reply(status_codes::BadRequest, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+	message.reply(status_codes::BadRequest, json::value::string(U("Path not found"))).then([&](pplx::task<void> t) { handle_error(t); });
 	return;
 };
 
@@ -126,6 +126,6 @@ void handler::handle_delete(http_request message)
 		return;
 	}
 
-	message.reply(status_codes::NotFound, U("Path not found")).then([&](pplx::task<void> t) { handle_error(t); });
+	message.reply(status_codes::NotFound, json::value::string(U("Path not found"))).then([&](pplx::task<void> t) { handle_error(t); });
 	return;
 };
