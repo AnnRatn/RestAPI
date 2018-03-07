@@ -15,7 +15,7 @@ utility::string_t handler::main_server_path = U("..\\container\\");
 utility::string_t handler::main_server_url_path = U("/container/");
 
 
-//
+//get the main URL
 web::json::value handler::get_start_page() {
 	json::value link;
 	link[L"self"] = json::value::string(L"/");
@@ -278,14 +278,15 @@ web::http::status_code handler::delete_container(const utility::string_t& url) {
 
 	FindClose(hf);
 
-	delete[] path;
 	delete[] local_path;
 	delete[] local_file_path;
 
 	if (RemoveDirectory(path) == 0) {
+		delete[] path;
 		return web::http::status_codes::NoContent;
 	}
 	else {
+		delete[] path;
 		return web::http::status_codes::OK;
 	}
 }
