@@ -81,6 +81,8 @@ web::json::value handler::get_container(const utility::string_t& url) {
 	TCHAR* path = new TCHAR[300];
 	StringCchPrintf(path, 300, L"%s%s%s", main_server_path.c_str(), url.c_str(), L"\\*");
 
+	json::value answer;
+
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hf;
 
@@ -100,19 +102,21 @@ web::json::value handler::get_container(const utility::string_t& url) {
 				i++;
 			}
 		} while (FindNextFile(hf, &FindFileData) != 0);
+
+		json::value link;
+		link[L"self"] = json::value::string(main_server_url_path + url);
+		link[L"merge"] = json::value::string(main_server_url_path + url.c_str() + L"/merge");
+		link[L"post_blob"] = json::value::string(main_server_url_path + url.c_str() + L"/blob/");
+		answer[L"links"] = link;
+		answer[L"blobs"] = files;
 	}
 
 	FindClose(hf);
 	delete[] path;
 
-	json::value link;
-	link[L"self"] = json::value::string(main_server_url_path + url);
-	link[L"merge"] = json::value::string(main_server_url_path + url.c_str() + L"/merge");
-	link[L"post_blob"] = json::value::string(main_server_url_path + FindFileData.cFileName + L"/blob/");
-	json::value answer;
-	answer[L"blobs"] = files;
-	answer[L"links"] = link;
-
+	if (!answer.has_field(L"blobs")) {
+		answer = json::value::string(L"no container");
+	}
 	return answer;
 }
 

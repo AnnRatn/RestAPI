@@ -21,3 +21,6 @@
 {"request":{"URL":"/container/4","method":"DELETE"},"time":"2018-03-09T20:00:31Z"}
 {"request":{"URL":"/container/3/blob/2","method":"POST"},"time":"2018-03-09T20:59:31Z"}
 {"request":{"URL":"/container/3/merge","method":"POST"},"time":"2018-03-09T20:06:33Z"}
+{"request":{"URL":"/container/4","method":"GET"},"time":"2018-03-09T22:58:15Z"}
+{"request":{"URL":"/container/3","method":"GET"},"time":"2018-03-09T22:08:16Z"}
+{"request":{"URL":"/container/2","method":"GET"},"time":"2018-03-09T22:19:16Z"}
