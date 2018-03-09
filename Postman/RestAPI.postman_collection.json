@@ -1,0 +1,223 @@
+{
+	"info": {
+		"name": "RestAPI",
+		"_postman_id": "2ffcba13-ed60-e531-eb72-f8dd36a34453",
+		"description": "Requests to Rest API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "main URL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "jpg"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:34568/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get containers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:34568/container/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						"container",
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get log",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:34568/container/log",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						"container",
+						"log"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get blobs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:34568/container/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						"container",
+						"2"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "post container",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:34568/container/4",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						"container",
+						"4"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "delete container",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://127.0.0.1:34568/container/4",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						"container",
+						"4"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "post blob",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": ""
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:34568/container/3/blob/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						"container",
+						"3",
+						"blob",
+						"2"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "merge blobs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "jpg"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:34568/container/3/merge",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "34568",
+					"path": [
+						"container",
+						"3",
+						"merge"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
